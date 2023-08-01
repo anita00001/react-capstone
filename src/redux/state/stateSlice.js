@@ -1,23 +1,25 @@
-// .src/redux/country/countrySlice.js
+// ./src/redux/state/stateSlice.js
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-// http://api.airvisual.com/v2/countries?key=cd90fbc7-1975-4405-b6b0-e7ca8f54d81f
+// http://api.airvisual.com/v2/states?country=Nepal&key=cd90fbc7-1975-4405-b6b0-e7ca8f54d81f;
 
 const baseURL = 'http://api.airvisual.com/v2/';
+// const country = 'Nepal';
 const key = 'cd90fbc7-1975-4405-b6b0-e7ca8f54d81f';
-const URL = `${baseURL}countries?key=${key}`;
+// const URL = `${baseURL}states?country=${country}&key=${key}`;
 
 const initialState = {
-  countryList: [],
+  stateList: [],
   status: 'idle',
   error: null,
 };
 
-export const fetchCountries = createAsyncThunk(
-  'fetchCountries',
-  async (thunkAPI) => {
+export const fetchStates = createAsyncThunk(
+  'fetchStates',
+  async (country, thunkAPI) => {
     try {
+      const URL = `${baseURL}states?country=${country}&key=${key}`;
       const response = await fetch(URL);
       const data = await response.json();
       // console.log(data);
@@ -29,26 +31,26 @@ export const fetchCountries = createAsyncThunk(
   },
 );
 
-const countrySlice = createSlice({
-  name: 'CountriesName',
+const stateSlice = createSlice({
+  name: 'StatesName',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchCountries.pending, (state) => {
+      .addCase(fetchStates.pending, (state) => {
         state.status = 'loading';
       })
 
-      .addCase(fetchCountries.fulfilled, (state, action) => {
+      .addCase(fetchStates.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.countryList = action.payload;
+        state.stateList = action.payload;
       })
 
-      .addCase(fetchCountries.rejected, (state, action) => {
+      .addCase(fetchStates.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       });
   },
 });
 
-export default countrySlice.reducer;
+export default stateSlice.reducer;

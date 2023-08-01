@@ -1,21 +1,23 @@
-// .src/redux/country/countrySlice.js
+// ./src/redux/city/citySlice.js
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-// http://api.airvisual.com/v2/countries?key=cd90fbc7-1975-4405-b6b0-e7ca8f54d81f
+// http://api.airvisual.com/v2/cities?state=Central-Region&country=Nepal&key=cd90fbc7-1975-4405-b6b0-e7ca8f54d81f
 
 const baseURL = 'http://api.airvisual.com/v2/';
+const country = 'Nepal';
+const state = 'Central-Region';
 const key = 'cd90fbc7-1975-4405-b6b0-e7ca8f54d81f';
-const URL = `${baseURL}countries?key=${key}`;
+const URL = `${baseURL}cities?state=${state}&country=${country}&key=${key}`;
 
 const initialState = {
-  countryList: [],
+  cityList: [],
   status: 'idle',
   error: null,
 };
 
-export const fetchCountries = createAsyncThunk(
-  'fetchCountries',
+export const fetchCities = createAsyncThunk(
+  'fetchCities',
   async (thunkAPI) => {
     try {
       const response = await fetch(URL);
@@ -29,26 +31,26 @@ export const fetchCountries = createAsyncThunk(
   },
 );
 
-const countrySlice = createSlice({
-  name: 'CountriesName',
+const citySlice = createSlice({
+  name: 'CitiesName',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchCountries.pending, (state) => {
+      .addCase(fetchCities.pending, (state) => {
         state.status = 'loading';
       })
 
-      .addCase(fetchCountries.fulfilled, (state, action) => {
+      .addCase(fetchCities.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.countryList = action.payload;
+        state.cityList = action.payload;
       })
 
-      .addCase(fetchCountries.rejected, (state, action) => {
+      .addCase(fetchCities.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       });
   },
 });
 
-export default countrySlice.reducer;
+export default citySlice.reducer;
